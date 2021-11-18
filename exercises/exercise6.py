@@ -83,6 +83,17 @@ class FResilientConsensus(Device):
     def print_result(self):
         print(f"Device {self.index()} agrees on {min(self._v)}")
 
+class KingAlgorithm(Device):
+    def __init__(self, index: int, number_of_devices: int, medium: Medium):
+        super().__init__(index, number_of_devices, medium)    
+
+    def b_multicast(self, message: MessageStub):
+        message.source = self.index()
+        for i in self.medium().ids():
+            message.destination = i
+            self.medium().send(message)
+
+    
 
 class SingleByzantine(Device):
 
