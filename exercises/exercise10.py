@@ -57,9 +57,12 @@ class Blockchain():
             return None
         return self.chain[-1]
 
-    difficulty = 4
+    difficulty = 2
     # TODO: set difficulty to 2, to have many more forks.
     # TODO: understand why having lower difficulty leads to more forks.
+    # Having a lower nonce difficulty leads to many more candidate blocks to consider when calculating forks.
+    # For the owner of a block if several forks of equal length are announced there is no reason to change away due to the payout of
+    # your own fork gaining consensus.
     def proof_of_work(self, block):
         computed_hash_binary = block.hash_binary
         if not computed_hash_binary.startswith('0' * Blockchain.difficulty):
@@ -158,6 +161,8 @@ class BlockchainMiner(Device):
 
     def handle_ingoing(self, ingoing: MessageStub):
         if isinstance(ingoing, BlockchainMessage):
+            "if len(self.blockchain.chain) > :"
+
             # TODO: design a logic to respect the "longest chain" rule
             # TODO: implement it
             # HINT: consider what a fork is, that forks can happen, and what to do in that case
@@ -200,7 +205,7 @@ class BlockchainClient(Device):
     def handle_ingoing(self, ingoing: MessageStub):
         # the termination clause is *very* random
         # let us say that the client quits when the blockchain is 20 blocks long
-        target_len = 20
+        target_len = 5
 
         if isinstance(ingoing, BlockchainMessage):
             if target_len <= len(ingoing.chain):
